@@ -101,6 +101,10 @@ app.put('/users/:id', async (req, res) => {
         const result = await pool.query('UPDATE users SET name = $1, email = $2 WHERE id = $3 RETURNING *', [name, email, id]);
         res.json({ message: 'Utilizador atualizado com sucesso!', user: result.rows[0] });
         console.log('Utilizador atualizado com sucesso!');
+        if (result.rows.length === 0) {
+            console.log('Utilizador não encontrado!');
+           return res.status(404).json({ error: 'Utilizador não encontrado!' });
+        }
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Erro ao atualizar o utilizador!' });
